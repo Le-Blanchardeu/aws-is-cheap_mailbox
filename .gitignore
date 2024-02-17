@@ -32,3 +32,8 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Custom ignore
+.terraform.lock.hcl
+lambda_function_payload.zip
+perso.txt
