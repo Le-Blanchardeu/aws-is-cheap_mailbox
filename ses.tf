@@ -16,29 +16,19 @@ resource "aws_ses_domain_identity_verification" "verification" {
   depends_on = [aws_route53_record.amazonses_verification_record]
 }
 
-
-# TODO: To finish later:
-# Check if there is already an existing rule set for incoming emails.
-# If yes we will use it, if not we create one
-# data "aws_ses_active_receipt_rule_set" "existing_rule_set" {
-# }
-
-resource "aws_ses_receipt_rule_set" "new_global_rule_set" {
-  #count         = length(data.aws_ses_active_receipt_rule_set.existing_rule_set) > 0 ? 0 : 1
-  rule_set_name = "main_incoming_email_rule_set"
+# If you already have an active receipt rule set, you can import it:
+# terraform import aws_ses_receipt_rule_set.global_rule_set enter-name-of-ruleset-here
+resource "aws_ses_receipt_rule_set" "global_rule_set" {
+  rule_set_name = "global_incoming_email_rule_set"
 }
 
-# Set it at the main rule set 
 resource "aws_ses_active_receipt_rule_set" "main" {
-  #count         = length(data.aws_ses_active_receipt_rule_set.existing_rule_set) > 0 ? 0 : 1
-  rule_set_name = "main_incoming_email_rule_set"
+  rule_set_name = aws_ses_receipt_rule_set.global_rule_set.rule_set_name
 }
-
 
 resource "aws_ses_receipt_rule" "store" {
   name          = "store-into-emails-received-${replace(var.domain_name, ".", "_")}"
-  # rule_set_name = length(data.aws_ses_active_receipt_rule_set.existing_rule_set) > 0 ? data.aws_ses_active_receipt_rule_set.existing_rule_set.id : aws_ses_receipt_rule_set.new_global_rule_set[0].id
-  rule_set_name = aws_ses_receipt_rule_set.new_global_rule_set.id
+  rule_set_name = aws_ses_receipt_rule_set.global_rule_set.id
   enabled       = true
   scan_enabled  = true
   recipients = [
