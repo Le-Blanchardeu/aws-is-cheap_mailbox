@@ -25,6 +25,10 @@ Now if you want to reply with your custom domain name (and not your perso email)
 !!! note
     If you already use SES and already got an active receipt rule set, you should import it into this terraform with the following command: `terraform import aws_ses_receipt_rule_set.global_rule_set enter-name-of-ruleset-here`
 
+!!! note
+    To display a sensitive Terraform output:
+     `terraform output your_smtp_password`
+
 ## Manual Deployment
 
 Now if you have a techno-phobia or are afraid to launch a stranger's terraform script (and you should be!). You can also follow the manual steps from this miserable blog -> [AWS IS CHEAP - Handling Emails](https://www.leblogdublanchard.com/2024/02/17/aws-is-cheap-handling-emails/)

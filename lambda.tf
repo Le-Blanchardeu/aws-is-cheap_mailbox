@@ -28,7 +28,7 @@ resource "aws_lambda_function" "read_emails" {
 
 # The lambda role
 resource "aws_iam_role" "iam_for_lambda" {
-  name               = "iam_for_lambda"
+  name               = "iam_for_lambda_${var.domain_name}"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 data "aws_iam_policy_document" "assume_role" {
@@ -53,8 +53,8 @@ data "aws_iam_policy_document" "read_s3" {
   }
 }
 resource "aws_iam_policy" "read_s3" {
-  name        = "read_s3"
-  description = "Read S3"
+  name        = "read_s3_${var.domain_name}"
+  description = "Read S3 for ${var.domain_name}"
   policy      = data.aws_iam_policy_document.read_s3.json
 }
 resource "aws_iam_role_policy_attachment" "attach_read_s3" {
@@ -77,9 +77,9 @@ data "aws_iam_policy_document" "lambda_logging" {
   }
 }
 resource "aws_iam_policy" "lambda_logging" {
-  name        = "lambda_logging"
+  name        = "lambda_logging_${var.domain_name}"
   path        = "/"
-  description = "IAM policy for logging from a lambda"
+  description = "IAM policy for logging from lambda ${var.domain_name}"
   policy      = data.aws_iam_policy_document.lambda_logging.json
 }
 
@@ -97,8 +97,8 @@ data "aws_iam_policy_document" "publish_sns" {
   }
 }
 resource "aws_iam_policy" "publish_sns" {
-  name        = "publish_sns"
-  description = "Publish in the SNS"
+  name        = "publish_sns_${var.domain_name}"
+  description = "Publish in the SNS ${var.domain_name}"
   policy      = data.aws_iam_policy_document.publish_sns.json
 }
 resource "aws_iam_role_policy_attachment" "attach_publish_sns" {
